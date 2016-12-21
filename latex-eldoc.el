@@ -20,8 +20,8 @@ environment in the text where point is."
 	(set (make-local-variable 'eldoc-documentation-function)
 	     'latex-eldoc-function)
 	(eldoc-mode 1))
-    (kill-local-variable 'eldoc-documentation-function)
-    (eldoc-mode -1)))
+    (eldoc-mode -1)
+    (kill-local-variable 'eldoc-documentation-function)))
 
 
 (defun latex-eldoc-function ()
