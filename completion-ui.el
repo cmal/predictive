@@ -3501,7 +3501,7 @@ enabled, complete what remains of that word."
 	 (auto (or (and auto-completion-mode 'auto-complete)
 		   (completion-ui-get-value-for-source
 		    overlay completion-auto-update)))
-         update wordstart pos)
+         update wordboundary pos)
     ;(combine-after-change-calls
 
       ;; ----- not auto-completing or auto-updating -----
@@ -3590,7 +3590,7 @@ enabled, complete what remains of that word."
 				     #'completion--capf-wrapper 'all))
 	    ;; standard `completion-at-point-functions' return value...
 	    (`(,hookfun . (,start ,end ,collection . ,props))
-	     (setq wordstart (= start (point))))
+	     (setq wordboundary (or (= start (point)) (= end (point)))))
 	    ;; FIXME: handle non-standard return val case?
 	    (_))
 
@@ -3627,7 +3627,7 @@ enabled, complete what remains of that word."
 
 		   ;; if point was not at start of completion or start of word
 		   ;; before deleting, respect `completion-overwrite' setting
-		   (unless (or overlay wordstart (null completion-overwrite))
+		   (unless (or overlay wordboundary (null completion-overwrite))
 		     (delete-region (point) end))
 
 		   ;; setup completion overlay
