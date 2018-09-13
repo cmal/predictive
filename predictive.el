@@ -1241,30 +1241,31 @@ also unload the dictionary from Emacs."
   (interactive (list (read-dict "Dictionary: "
 				nil predictive-used-dict-list)))
   ;; sort out argument
-  (and (symbolp dict) (setq dict (symbol-value dict)))
+  (and (symbolp dict) (boundp dict) (setq dict (symbol-value dict)))
 
-  ;; remove dict from buffer's used dictionary list
-  (setq predictive-used-dict-list (delq dict predictive-used-dict-list))
-  (message "Dictionary %s unloaded from buffer %s"
-	   (dictree-name dict) (buffer-name (current-buffer)))
+  (when (dictree-p dict)
+    ;; remove dict from buffer's used dictionary list
+    (setq predictive-used-dict-list (delq dict predictive-used-dict-list))
+    (message "Dictionary %s unloaded from buffer %s"
+	     (dictree-name dict) (buffer-name (current-buffer)))
 
-  ;; remove buffer from dict's buffer list in global used dictionary list
-  (let ((entry (assq dict predictive-global-used-dict-list)))
-    (when entry
-      (setq entry (setcdr entry (delq (current-buffer) (cdr entry)))))
+    ;; remove buffer from dict's buffer list in global used dictionary list
+    (let ((entry (assq dict predictive-global-used-dict-list)))
+      (when entry
+	(setq entry (setcdr entry (delq (current-buffer) (cdr entry)))))
 
-    ;; unload dictionary if it's not longer used by any buffer and isn't the
-    ;; main dict or listed in `predictive-dict-lock-loaded-list'
-    (unless (or entry
-		(memq (intern-soft (dictree-name dict))
-		      (if (listp (default-value 'predictive-main-dict))
-			  (default-value 'predictive-main-dict)
-			(list (default-value 'predictive-main-dict))))
-		(memq (intern-soft (dictree-name dict))
-		      predictive-dict-lock-loaded-list))
-      (setq predictive-global-used-dict-list
-	    (assq-delete-all dict predictive-global-used-dict-list))
-      (dictree-unload dict dont-save))))
+      ;; unload dictionary if it's not longer used by any buffer and isn't the
+      ;; main dict or listed in `predictive-dict-lock-loaded-list'
+      (unless (or entry
+		  (memq (intern-soft (dictree-name dict))
+			(if (listp (default-value 'predictive-main-dict))
+			    (default-value 'predictive-main-dict)
+			  (list (default-value 'predictive-main-dict))))
+		  (memq (intern-soft (dictree-name dict))
+			predictive-dict-lock-loaded-list))
+	(setq predictive-global-used-dict-list
+	      (assq-delete-all dict predictive-global-used-dict-list))
+	(dictree-unload dict dont-save)))))
 
 
 
