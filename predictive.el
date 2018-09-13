@@ -725,6 +725,14 @@ or `predictive-buffer-dict' in a buffer.")
 ;;; ================================================================
 ;;;                  Convenience macros and functions
 
+(defmacro predictive-lexical-binding-p ()
+  "Return non-nil if lexical binding is in effect, nil otherwise."
+  (let ((tempvar (make-symbol "x")))
+    `(let ((,tempvar nil)
+           (f (let ((,tempvar t)) (lambda () ,tempvar))))
+       (funcall f))))
+
+
 (defun predictive-capitalized-p (string)
   ;; Return t if string is capitalized (only first letter upper case), nil
   ;; otherwise.
@@ -841,7 +849,7 @@ disabling `predictive-use-auto-learn-cache'."
 
 
 ;; wrap filter for `dictree-regexp-search' to ignore regexp match data
-(if (trie-lexical-binding-p)
+(if (predictive-lexical-binding-p)
     (defun predictive--wrap-regexp-filter (filter)
       (lambda (key data)
 	;; if car of argument contains a key+group list rather than a straight
@@ -867,7 +875,7 @@ disabling `predictive-use-auto-learn-cache'."
 
 
 ;; wrap filter for `dictree-fuzzy-complete' to ignore distance data
-(if (trie-lexical-binding-p)
+(if (predictive-lexical-binding-p)
     (defun predictive--wrap-fuzzy-complete-filter (filter)
       (lambda (key data) (funcall filter (nth 0 key) data)))
   (defun predictive--wrap-fuzzy-complete-filter (filter)
@@ -1165,7 +1173,7 @@ To set the default main dictionary, you should customize
 	  (setq dict dic)
 	(error "Dictionary %s could not be loaded" dict)))))
   ;; unload previous main dictionary
-  (mapc 'predictive-unload-dict
+  (mapc #'predictive-unload-dict
 	(if predictive-buffer-dict
 	    (if (listp predictive-buffer-dict)
 		predictive-buffer-dict
@@ -2925,7 +2933,7 @@ meta-dictionary will be based, instead of
     ;; make sure it's unloaded
     (if (or (null filename) (not (file-exists-p filename)) main-dict)
 	(when (boundp (predictive-buffer-local-meta-dict-name))
-	  (unintern (predictive-buffer-local-meta-dict-name)))
+	  (unintern (predictive-buffer-local-meta-dict-name) nil))
       ;; if the buffer meta-dictionary exists, and we're basing it on
       ;; `predictive-main-dict', load it
       (load filename)
@@ -2940,7 +2948,7 @@ meta-dictionary will be based, instead of
 			(predictive-buffer-local-meta-dict-name)))))
 	   (y-or-n-p "Existing buffer-local dictionary is not based on the\
  current main dictionary. Update it? ")
-	   (unintern (predictive-buffer-local-meta-dict-name))))
+	   (unintern (predictive-buffer-local-meta-dict-name) nil)))
 
     ;; if the buffer meta-dictionary doesn't exist or is being updated...
     (unless (boundp (predictive-buffer-local-meta-dict-name))
@@ -2979,12 +2987,12 @@ meta-dictionary will be based, instead of
     (when (boundp buffer-dict)
       (if (dictree-p (symbol-value (predictive-buffer-local-dict-name)))
 	  (dictree-unload (symbol-value (predictive-buffer-local-dict-name)))
-	(unintern buffer-dict)))
+	(unintern buffer-dict nil)))
     (when (boundp meta-dict)
       (if (dictree-p (symbol-value (predictive-buffer-local-meta-dict-name)))
 	  (dictree-unload
 	   (symbol-value (predictive-buffer-local-meta-dict-name)))
-	(unintern meta-dict)))))
+	(unintern meta-dict nil)))))
 
 
 
