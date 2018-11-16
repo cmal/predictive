@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 
-EMACS = emacs
+EMACS = /usr/local/Cellar/emacs/HEAD-dc18a09_1/Emacs.app/Contents/MacOS/Emacs
 DESTDIR = $(HOME)/.emacs.d/predictive
 DICTDIR = $(HOME)/.emacs.d/predictive
 INFODIR = /usr/share/info

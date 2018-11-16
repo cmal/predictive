@@ -60,10 +60,10 @@ Otherwise, it is positioned under the word being completed."
   :type 'boolean)
 
 
-(defface completion-popup-tip-face
-  '((t . (:inherit popup-tip-face)))
-  "Face used in popup-tip."
-  :group 'completion-ui-popup-tip)
+;; (defface completion-popup-tip-face
+;;   '((t . (:inherit popup-tip-face)))
+;;   "Face used in popup-tip."
+;;   :group 'completion-ui-popup-tip)
 
 
 
@@ -203,8 +203,8 @@ INTERACTIVE is supplied, pretend we were called interactively."
 				    completion-ui-popup-tip-margin
 				  (- (length (overlay-get overlay 'prefix)))))
 		      :nowait t
-		      :face 'completion-popup-tip-face
-		      :selection-face 'completion-highlight-face
+		      ;; :face 'completion-popup-tip-face
+		      ;; :selection-face 'completion-highlight-face
 		      :margin-left completion-ui-popup-tip-margin
 		      :margin-right completion-ui-popup-tip-margin))
 	      (i (overlay-get overlay 'completion-num)))

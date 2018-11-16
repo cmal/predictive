@@ -394,7 +394,7 @@ before the `completion-auto-show' interface is activated."
   :group 'completion-ui)
 
 
-(defcustom auto-completion-at-point-functions nil ;'(dabbrev-completion-at-point)
+(defcustom auto-completion-at-point-functions ;nil ;'(dabbrev-completion-at-point)
   "Special hook to find the completion table for the thing at point.
 
 Used instead of `completion-at-point-functions' by
@@ -1102,10 +1102,11 @@ used if the current Emacs version lacks command remapping support."
       'completion-cycle-backwards)
     ;; C-RET accepts, C-DEL and C-q reject
     (define-key map [(control return)] 'completion-accept)
+    (define-key map "\t" 'completion-accept)
     (define-key map [(control backspace)] 'completion-reject)
     (define-key map "\C-q" 'completion-reject)
     ;; <tab> does traditional tab-completion
-    (define-key map "\t" 'completion-tab-complete)
+    ;; (define-key map "\t" 'completion-tab-complete)
     ;; C-<tab> scoots ahead
     (define-key map [(control tab)] 'completion-extend-prefix)
     ;; C-<space> abandons (C-<space> produces C-@ in terminals)

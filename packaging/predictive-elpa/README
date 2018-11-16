@@ -414,7 +414,7 @@ can be displayed in the echo area, and/or in a tooltip below the point
 Tooltip::). When completion hot-keys are enabled, both of these also
 indicate which completion candidate corresponds to which hot-key. If you
 only want the hotkeys to be enabled when the tooltip or pop-up frame
-(see below) are displayed, then set `completion-use-hotkeys' to
+(see below) are displayed, then set `completion-ui-use-hotkeys' to
 `pop-up'.
 
    The completion tooltip is more than just a visual reminder of which

@@ -925,9 +925,9 @@ Setting this variable directly will have no effect. Use
 		(predictive-which-dict-mode
 		 ("["
 		  (:eval
-		   (let ((name (predictive-which-dict-name)))
+                   (let ((name (predictive-which-dict-name)))
 		     (add-text-properties
-		      0 (length (car name)) `(help-echo ,(cdr name))
+		      0 (length (car name)) (when (cdr name) `(help-echo ,(cdr name)))
 		      (car name))
 		     (car name)))
 		  "]")))))
